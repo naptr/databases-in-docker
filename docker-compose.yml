@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  mongo:
+    container_name: jid-mongodb
+    image: jid:mongodb-0.0.1
+    build: ./mongo
+    env_file: ./mongo/.env
+    volumes:
+      - ./mongo/mongod.log:/etc/mongod.log
+      - ./mongo/data:/data/db
+      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+      - jid
+    ports:
+      - "27017:27017"
+    command:
+      - '--auth'
+  postgres:
+    container_name: jid-postgres
+    image: jid:postgres-0.0.1
+    build: ./postgres
+    # env_file: ./postgres/.env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=jid_local
+      - POSTGRES_PASSWORD=jid_local
+      - POSTGRES_DB=jid
+    volumes:
+      - ./postgres/postgresql.conf:/usr/share/postgresql/postgresql.conf
+      - ./postgres/database:/var/lib/postgresql/data
+    networks:
+      - jid
+    ports:
+      - "5432:5432"
+    command: postgres -c config_file=/usr/share/postgresql/postgresql.conf
+networks:
+  jid:
+    name: jid
+    driver: bridge
