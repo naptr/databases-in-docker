@@ -19,12 +19,7 @@ services:
     container_name: jid-postgres
     image: jid:postgres-0.0.1
     build: ./postgres
-    # env_file: ./postgres/.env
-    environment:
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_USER=jid_local
-      - POSTGRES_PASSWORD=jid_local
-      - POSTGRES_DB=jid
+    env_file: ./postgres/.env
     volumes:
       - ./postgres/postgresql.conf:/usr/share/postgresql/postgresql.conf
       - ./postgres/database:/var/lib/postgresql/data
